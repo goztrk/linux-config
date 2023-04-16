@@ -1,0 +1,25 @@
+#!/usr/bin/bash env
+
+# First things first: Install git
+sudo dnf install git
+
+# Set git config globals
+git config --global user.name "goztrk"
+git config --global user.email "me@gokhan.org.tr"
+
+git clone --bare https://github.com/goztrk/dotfiles-cfg $HOME/.cfg
+
+function config {
+	/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME/.cfg $@
+}
+
+mkdir -p .config-backup
+config checkout
+if [ $? = 0 ]; then
+	echo "Checked out config.";
+else
+	echo "Backing up pre-existing dotfiles";
+	config checkout 2>&1 | egrep "\s+\." | awk {'print $1'} | xargs -I{} mv {} .config-backup/{}
+fi;
+config checkout
+config config status.showUntrackedFiles no
