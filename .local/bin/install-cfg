@@ -1,4 +1,4 @@
-#!/usr/bin/bash env
+#!/bin/bash
 
 # First things first: Install git
 sudo dnf install git
